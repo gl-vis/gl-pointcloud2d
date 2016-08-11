@@ -1,8 +1,8 @@
 {
-  "name": "gl-scatter2d",
-  "version": "1.0.6",
-  "description": "2D WebGL scatter plots",
-  "main": "scatter2d.js",
+  "name": "gl-pointcloud2d",
+  "version": "1.0.0",
+  "description": "2D WebGL point cloud plots",
+  "main": "pointcloud2d.js",
   "directories": {
     "example": "example"
   },
@@ -12,36 +12,29 @@
     ]
   },
   "dependencies": {
-    "binary-search-bounds": "^2.0.3",
     "gl-buffer": "^2.1.2",
     "gl-shader": "^4.0.4",
     "glslify": "^2.1.2",
-    "snap-points-2d": "^3.0.0",
     "typedarray-pool": "^1.1.0"
-  },
-  "devDependencies": {
-    "mouse-change": "^1.2.1",
-    "mouse-wheel": "^1.0.2",
-    "gauss-random": "^1.0.1",
-    "canvas-fit": "^1.4.0"
-  },
-  "scripts": {
-    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mikolalysenko/gl-scatter2d.git"
+    "url": "git+https://github.com/gl-vis/gl-pointcloud2d.git"
   },
   "keywords": [
     "webgl",
-    "scatter",
+    "point cloud",
+    "pointcloud",
     "gl-vis",
     "2d"
   ],
   "author": "Mikola Lysenko",
+  "contributors": [
+    "Robert Monfera"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mikolalysenko/gl-scatter2d/issues"
+    "url": "https://github.com/gl-vis/gl-pointcloud2d/issues"
   },
-  "homepage": "https://github.com/mikolalysenko/gl-scatter2d#readme"
+  "homepage": "https://github.com/gl-vis/gl-pointcloud2d#readme"
 }
