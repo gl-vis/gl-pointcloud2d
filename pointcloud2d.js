@@ -7,9 +7,9 @@ var pool = require('typedarray-pool')
 
 var SHADERS = require('./lib/shader')
 
-module.exports = createScatter2D
+module.exports = createPointcloud2D
 
-function Scatter2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
+function Pointcloud2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.plot           = plot
   this.offsetBuffer   = offsetBuffer
   this.pickBuffer     = pickBuffer
@@ -25,7 +25,7 @@ function Scatter2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.points         = null
 }
 
-var proto = Scatter2D.prototype
+var proto = Pointcloud2D.prototype
 
 proto.dispose = function() {
   this.shader.dispose()
@@ -170,14 +170,14 @@ proto.pick = function(x, y, value) {
   }
 }
 
-function createScatter2D(plot, options) {
+function createPointcloud2D(plot, options) {
   var gl = plot.gl
   var buffer = createBuffer(gl)
   var pickBuffer = createBuffer(gl)
   var shader = createShader(gl, SHADERS.pointVertex, SHADERS.pointFragment)
   var pickShader = createShader(gl, SHADERS.pickVertex, SHADERS.pickFragment)
 
-  var result = new Scatter2D(plot, buffer, pickBuffer, shader, pickShader)
+  var result = new Pointcloud2D(plot, buffer, pickBuffer, shader, pickShader)
   result.update(options)
 
   //Register with plot
