@@ -15,7 +15,7 @@ function Pointcloud2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.pickBuffer     = pickBuffer
   this.shader         = shader
   this.pickShader     = pickShader
-  this.size           = 12.0
+  this.size           = 0.1
   this.borderSize     = 1.0
   this.pointCount     = 0
   this.color          = [1, 0, 0, 1]
@@ -115,7 +115,7 @@ return function(pickOffset) {
   var dataY   = dataBox[3] - dataBox[1]
 
   var visiblePointCountEstimate = count(this.points, dataBox)
-  var basicPointSize =  this.plot.pickPixelRatio * Math.max(0.1, Math.min(30, 30 / Math.pow(visiblePointCountEstimate, 0.33333)))
+  var basicPointSize =  this.plot.pickPixelRatio * Math.max(Math.min(1, this.size), Math.min(50, 50 / Math.pow(visiblePointCountEstimate, 0.33333)))
 
   MATRIX[0] = 2.0 * boundX / dataX
   MATRIX[4] = 2.0 * boundY / dataY
@@ -129,7 +129,8 @@ return function(pickOffset) {
   shader.uniforms.matrix      = MATRIX
   shader.uniforms.color       = this.color
   shader.uniforms.borderColor = this.borderColor
-  shader.uniforms.pointCloud = shader.uniforms.pointSize < 5
+  shader.uniforms.pointCloud = basicPointSize < 5
+  //shader.uniforms.pointSize = this.plot.pixelRatio * (this.size + this.borderSize)
   shader.uniforms.pointSize = basicPointSize * (shader.uniforms.pointCloud ? 1 : (this.size + this.borderSize) / this.size)
   shader.uniforms.centerFraction = this.borderSize === 0 ? 2.0 : this.size / (this.size + this.borderSize + 1.25)
 
@@ -145,8 +146,23 @@ return function(pickOffset) {
     shader.uniforms.pickOffset = PICK_VEC4
     this.pickOffset = pickOffset
   }
-  
+
+  // Worth switching these off, but we can't make assumptions about other
+  // renderers, so let's restore it after each draw
+  var blend = gl.getParameter(gl.BLEND)
+  var dither = gl.getParameter(gl.DITHER)
+
+  if(blend)
+    gl.disable(gl.BLEND)
+  if(dither)
+    gl.disable(gl.DITHER)
+
   gl.drawArrays(gl.POINTS, 0, this.pointCount)
+
+  if(blend)
+    gl.enable(gl.BLEND)
+  if(dither)
+    gl.enable(gl.DITHER)
 
   return pickOffset + this.pointCount
 }
