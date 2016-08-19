@@ -20,7 +20,6 @@ function Pointcloud2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.pointCount     = 0
   this.color          = [1, 0, 0, 1]
   this.borderColor    = [0, 0, 0, 1]
-  this.bounds         = [Infinity, Infinity, -Infinity, -Infinity]
   this.pickOffset     = 0
   this.points         = null
 }
@@ -64,10 +63,6 @@ proto.update = function(options) {
   var data          = options.positions
   var packed        = dataStraightThrough ? data : pool.mallocFloat32(data.length)
   var packedId      = idStraightThrough ? options.idToIndex : pool.mallocInt32(pointCount)
-
-  var min = 0
-  var max = 1
-  this.bounds = [min, min, max, max]
 
   if(!dataStraightThrough) {
     packed.set(data)
@@ -127,18 +122,16 @@ return function(pickOffset) {
     return pickOffset
   }
 
-  var boundX  = this.bounds[2] - this.bounds[0]
-  var boundY  = this.bounds[3] - this.bounds[1]
   var dataX   = dataBox[2] - dataBox[0]
   var dataY   = dataBox[3] - dataBox[1]
 
   var visiblePointCountEstimate = count(this.points, dataBox)
   var basicPointSize =  this.plot.pickPixelRatio * Math.max(Math.min(1, this.size), Math.min(50, 50 / Math.pow(visiblePointCountEstimate, 0.33333)))
 
-  MATRIX[0] = 2.0 * boundX / dataX
-  MATRIX[4] = 2.0 * boundY / dataY
-  MATRIX[6] = 2.0 * (this.bounds[0] - dataBox[0]) / dataX - 1.0
-  MATRIX[7] = 2.0 * (this.bounds[1] - dataBox[1]) / dataY - 1.0
+  MATRIX[0] = 2.0 / dataX
+  MATRIX[4] = 2.0 / dataY
+  MATRIX[6] = -2.0 * dataBox[0] / dataX - 1.0
+  MATRIX[7] = -2.0 * dataBox[1] / dataY - 1.0
 
   this.offsetBuffer.bind()
 
