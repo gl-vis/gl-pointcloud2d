@@ -58,7 +58,7 @@ proto.update = function(options) {
   // TODO eventually abstract out STP logic, maybe into `pool` or a layer above
   var pointCount = options.positions.length >>> 1
   var dataStraightThrough = options.positions instanceof Float32Array
-  var idStraightThrough = options.idToIndex instanceof Int32Array && options.idToIndex.length === pointCount
+  var idStraightThrough = options.idToIndex instanceof Int32Array && options.idToIndex.length >= pointCount // permit larger to help reuse
 
   var data          = options.positions
   var packed        = dataStraightThrough ? data : pool.mallocFloat32(data.length)
