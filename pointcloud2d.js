@@ -54,28 +54,46 @@ proto.update = function(options) {
   this.borderColor  = dflt('borderColor', [0, 0, 0, 1]).slice()
 
   //Update point data
+
+  // Attempt straight-through processing (STP) to avoid allocation and copy
+  // TODO eventually abstract out STP logic, maybe into `pool` or a layer above
+  var pointCount = options.positions.length >>> 1
+  var dataStraightThrough = options.positions instanceof Float32Array
+  var idStraightThrough = options.idToIndex instanceof Int32Array && options.idToIndex.length === pointCount
+
   var data          = options.positions
-  var packed        = pool.mallocFloat32(data.length)
-  var packedId      = pool.mallocInt32(data.length >>> 1)
-  packed.set(data)
-  this.points       = data
+  var packed        = dataStraightThrough ? data : pool.mallocFloat32(data.length)
+  var packedId      = idStraightThrough ? options.idToIndex : pool.mallocInt32(pointCount)
 
   var min = 0
-  var max = 10
+  var max = 1
   this.bounds = [min, min, max, max]
-  for(i = 0; i < data.length >>> 1; i++) {
-    packedId[i] = i
+
+  if(!dataStraightThrough) {
+    packed.set(data)
   }
-  for(i = 0; i < data.length; i++) {
-    packed[i] = (packed[i] - min) / (max - min)
+
+  if(!idStraightThrough) {
+    packed.set(data)
+    for(i = 0; i < pointCount; i++) {
+      packedId[i] = i
+    }
   }
+
+  this.points       = data
 
   this.offsetBuffer.update(packed)
   this.pickBuffer.update(packedId)
-  pool.free(packedId)
-  pool.free(packed)
 
-  this.pointCount = data.length >>> 1
+  if(!dataStraightThrough) {
+    pool.free(packed)
+  }
+
+  if(!idStraightThrough) {
+    pool.free(packedId)
+  }
+
+  this.pointCount = pointCount
   this.pickOffset = 0
 }
 

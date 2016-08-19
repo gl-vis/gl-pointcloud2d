@@ -24,7 +24,8 @@ Creates a new 2D point cloud.
 
 `options` has the following properties:
 
-* `data` is a packed 2*n length array of the unrolled xy coordinates of the points (required)
+* `data` is a packed 2*n length array of the unrolled xy coordinates of the points (required) - buffering is significantly faster if it's of type Float32Array
+* `idToIndex` is an optional array of length n where `idToIndex[i] = i` - buffering is significantly faster if it's supplied and of type Int32Array
 * `color` is the color of a marker as a length 4 RGBA array (default `[1,0,0,1]`)
 * `borderSize` is the ratio of the border around each point (default `0`)
 * `borderColor` is the color of the border of each point (default `[0,0,0,1]`)
