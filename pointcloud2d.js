@@ -15,8 +15,10 @@ function Pointcloud2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.pickBuffer     = pickBuffer
   this.shader         = shader
   this.pickShader     = pickShader
-  this.size           = 0.1
-  this.borderSize     = 1.0
+  this.sizeMin        = 0.5
+  this.sizeMinCap     = 2
+  this.sizeMax        = 20
+  this.areaRatio      = 1.0
   this.pointCount     = 0
   this.color          = [1, 0, 0, 1]
   this.borderColor    = [0, 0, 0, 1]
@@ -47,9 +49,10 @@ proto.update = function(options) {
     return value
   }
 
-  this.size         = dflt('size', 12.0)
+  this.sizeMin      = dflt('sizeMin', 0.5)
+  this.sizeMax      = dflt('sizeMax', 20)
   this.color        = dflt('color', [1, 0, 0, 1]).slice()
-  this.borderSize   = dflt('borderSize', 1)
+  this.areaRatio    = dflt('areaRatio', 1)
   this.borderColor  = dflt('borderColor', [0, 0, 0, 1]).slice()
 
   //Update point data
@@ -126,7 +129,7 @@ return function(pickOffset) {
   var dataY   = dataBox[3] - dataBox[1]
 
   var visiblePointCountEstimate = count(this.points, dataBox)
-  var basicPointSize =  this.plot.pickPixelRatio * Math.max(Math.min(1, this.size), Math.min(50, 50 / Math.pow(visiblePointCountEstimate, 0.33333)))
+  var basicPointSize =  this.plot.pickPixelRatio * Math.max(Math.min(this.sizeMinCap, this.sizeMin), Math.min(this.sizeMax, this.sizeMax / Math.pow(visiblePointCountEstimate, 0.33333)))
 
   MATRIX[0] = 2.0 / dataX
   MATRIX[4] = 2.0 / dataY
@@ -141,9 +144,9 @@ return function(pickOffset) {
   shader.uniforms.color       = this.color
   shader.uniforms.borderColor = this.borderColor
   shader.uniforms.pointCloud = basicPointSize < 5
-  //shader.uniforms.pointSize = this.plot.pixelRatio * (this.size + this.borderSize)
-  shader.uniforms.pointSize = basicPointSize * (shader.uniforms.pointCloud ? 1 : (this.size + this.borderSize) / this.size)
-  shader.uniforms.centerFraction = this.borderSize === 0 ? 2.0 : this.size / (this.size + this.borderSize + 1.25)
+  //shader.uniforms.pointSize = this.plot.pixelRatio * (this.size + this.areaRatio)
+  shader.uniforms.pointSize = basicPointSize * (shader.uniforms.pointCloud ? 1 : (this.sizeMin + this.areaRatio) / this.sizeMin)
+  shader.uniforms.centerFraction = this.areaRatio === 0 ? 2.0 : this.sizeMin / (this.sizeMin + this.areaRatio + 1.25)
 
   if(pick) {
 
