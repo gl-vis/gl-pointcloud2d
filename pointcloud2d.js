@@ -22,6 +22,7 @@ function Pointcloud2D(plot, offsetBuffer, pickBuffer, shader, pickShader) {
   this.pointCount     = 0
   this.color          = [1, 0, 0, 1]
   this.borderColor    = [0, 0, 0, 1]
+  this.blend          = false
   this.pickOffset     = 0
   this.points         = null
 }
@@ -54,6 +55,7 @@ proto.update = function(options) {
   this.color        = dflt('color', [1, 0, 0, 1]).slice()
   this.areaRatio    = dflt('areaRatio', 1)
   this.borderColor  = dflt('borderColor', [0, 0, 0, 1]).slice()
+  this.blend        = dflt('blend', false)
 
   //Update point data
 
@@ -166,14 +168,14 @@ return function(pickOffset) {
   var blend = gl.getParameter(gl.BLEND)
   var dither = gl.getParameter(gl.DITHER)
 
-  if(blend)
+  if(blend && !this.blend)
     gl.disable(gl.BLEND)
   if(dither)
     gl.disable(gl.DITHER)
 
   gl.drawArrays(gl.POINTS, 0, this.pointCount)
 
-  if(blend)
+  if(blend && !this.blend)
     gl.enable(gl.BLEND)
   if(dither)
     gl.enable(gl.DITHER)

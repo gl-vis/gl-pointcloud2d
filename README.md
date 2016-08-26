@@ -29,6 +29,7 @@ Creates a new 2D point cloud.
 * `color` is the color of a marker as a length 4 RGBA array (default `[1,0,0,1]`)
 * `borderSize` is the ratio of the border around each point (default `0`)
 * `borderColor` is the color of the border of each point (default `[0,0,0,1]`)
+* `blend` determines if `gl` blending is enabled for a translucency effect on overlaps; enabling it lowers draw speed somewhat (default `false`)
 
 **Returns** A new point cloud plot object, which is also registered to `plot`
 
