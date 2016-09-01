@@ -146,9 +146,8 @@ return function(pickOffset) {
   shader.uniforms.color       = this.color
   shader.uniforms.borderColor = this.borderColor
   shader.uniforms.pointCloud = basicPointSize < 5
-  //shader.uniforms.pointSize = this.plot.pixelRatio * (this.size + this.areaRatio)
-  shader.uniforms.pointSize = basicPointSize * (shader.uniforms.pointCloud ? 1 : (this.sizeMin + this.areaRatio) / this.sizeMin)
-  shader.uniforms.centerFraction = this.areaRatio === 0 ? 2.0 : this.sizeMin / (this.sizeMin + this.areaRatio + 1.25)
+  shader.uniforms.pointSize = basicPointSize
+  shader.uniforms.centerFraction = Math.min(1, Math.max(0, Math.sqrt(1 - this.areaRatio)))
 
   if(pick) {
 
