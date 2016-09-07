@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "gl-buffer": "^2.1.2",
-    "gl-shader": "^4.0.4",
+    "gl-shader": "^4.2.1",
     "glslify": "^2.1.2",
     "typedarray-pool": "^1.1.0"
   },
