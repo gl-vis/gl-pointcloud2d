@@ -51,6 +51,7 @@ proto.update = function(options) {
   }
 
   this.sizeMin      = dflt('sizeMin', 0.5)
+  // this.sizeMinCap      = dflt('sizeMinCap', 2)
   this.sizeMax      = dflt('sizeMax', 20)
   this.color        = dflt('color', [1, 0, 0, 1]).slice()
   this.areaRatio    = dflt('areaRatio', 1)
@@ -116,7 +117,6 @@ proto.unifiedDraw = (function() {
                 0, 0, 1]
   var PICK_VEC4 = [0, 0, 0, 0]
 return function(pickOffset) {
-
   var pick = pickOffset !== void(0)
 
   var shader        = pick ? this.pickShader : this.shader
