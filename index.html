@@ -25616,7 +25616,7 @@ proto.dispose = function() {
 }
 
 proto.update = function(options) {
-
+  console.time('init')
   var i
 
   options = options || {}
@@ -25674,6 +25674,8 @@ proto.update = function(options) {
 
   this.pointCount = pointCount
   this.pickOffset = 0
+
+  console.timeEnd('init')
 }
 
 function count(points, dataBox) {
