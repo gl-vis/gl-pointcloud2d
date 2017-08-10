@@ -17,6 +17,9 @@
     "glslify": "^2.1.2",
     "typedarray-pool": "^1.1.0"
   },
+  "scripts": {
+    "build": "browserify test.js -g bubleify | indexhtmlify | github-cornerify | metadataify > example/index.html"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gl-vis/gl-pointcloud2d.git"
