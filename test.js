@@ -3,7 +3,6 @@
 /**
  * Test multiple points
  */
-require('enable-mobile')
 const random = require('gauss-random')
 var fit = require('canvas-fit')
 var mouseWheel = require('mouse-wheel')
