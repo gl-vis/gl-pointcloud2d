@@ -1,6 +1,6 @@
 {
   "name": "gl-pointcloud2d",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "2D WebGL point cloud plots",
   "main": "pointcloud2d.js",
   "directories": {
